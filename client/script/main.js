@@ -18,15 +18,15 @@ const App = new Vue({
     },
     userId: '',
     /* goEasy 添加以下变量 */
-    channel: 'channel1', // GoEasy channel
-    appkey: '******', // GoEasy应用appkey，替换成你的appkey
+    //channel: 'channel1', // GoEasy channel
+    //appkey: '******', // GoEasy应用appkey，替换成你的appkey
 
     /* leancloud-realtime 添加以下变量，appId、appKey、server这几个值去leancloud控制台>设置>应用凭证里面找 */
-    chatRoom: null,
-    appId: '*******************',
-    appKey: '*******************',
-    server: 'https://*******************.***.com', // REST API 服务器地址
-  },
+    //chatRoom: null,
+    //appId: '*******************',
+    //appKey: '*******************',
+    //server: 'https://*******************.***.com', // REST API 服务器地址
+ // },
   methods: {
     randomString(length) {
       let str = ''
@@ -89,7 +89,7 @@ const App = new Vue({
       const params = JSON.stringify(controlParam)
 
       // 使用socket-io
-      // this.socket.emit('video-control', params)
+       this.socket.emit('video-control', params)
 
       // 使用GoEasy
       // this.goEasyConnect.publish({
@@ -98,22 +98,22 @@ const App = new Vue({
       // })
 
       // 使用leancloud-realtime
-      this.chatRoom.send(new TextMessage(params))
-    },
-    resultHandler(result) {
-      switch (result.action) {
-        case "play":
-          this.player.currentTime = (result.time + 0.2) //播放时+0.2秒，抵消网络延迟
-          this.player.play();
-          break
-        case "pause":
-          this.player.currentTime = (result.time)
-          this.player.pause();
-          break
-        case "seek":
-          this.player.currentTime = (result.time);
-          break
-      }
+  //    this.chatRoom.send(new TextMessage(params))
+  //  },
+  //  resultHandler(result) {
+  //    switch (result.action) {
+  //      case "play":
+   //       this.player.currentTime = (result.time + 0.2) //播放时+0.2秒，抵消网络延迟
+   //       this.player.play();
+    //      break
+    //    case "pause":
+    //      this.player.currentTime = (result.time)
+     //     this.player.pause();
+    //      break
+     //   case "seek":
+    //     this.player.currentTime = (result.time);
+     //     break
+   //   }
     },
     // 获取 url 参数
     getParam(variable) {
@@ -185,13 +185,13 @@ const App = new Vue({
 
     /*使用socket-io--------------------------*/
 
-    // this.socket = io('http://192.168.3.58:2233'); // 替换成你的websocket服务地址
-    // this.socket.on('video-control', (res) => {
-    //   const result = JSON.parse(res);
-    //   if (result.user !== this.userId) {
-    //     this.resultHandler(result)
-    //   }
-    // });
+     this.socket = io('http://127.0.0.1:2233'); // 替换成你的websocket服务地址
+     this.socket.on('video-control', (res) => {
+       const result = JSON.parse(res);
+       if (result.user !== this.userId) {
+         this.resultHandler(result)
+       }
+     });
 
     /*使用socket-io--------------------------*/
 
@@ -229,90 +229,90 @@ const App = new Vue({
 
     /* 使用leanCloud ---------------------------*/
 
-    const realtime = new Realtime({
-      appId: this.appId,
-      appKey: this.appKey,
-      server: this.server,
-    })
+//    const realtime = new Realtime({
+//      appId: this.appId,
+//      appKey: this.appKey,
+//      server: this.server,
+  //  })
 
     //换成你自己的一个房间的 conversation id（这是服务器端生成的），第一次执行代码就会生成，在leancloud控制台>即时通讯>对话下面，复制一个过来即可
 
-    var roomId = this.getParam("id")?this.getParam("id"):'***********'
+ //   var roomId = this.getParam("id")?this.getParam("id"):'***********'
 
     // 每个客户端自定义的 id
 
-    var client, room
+  //  var client, room
 
-    realtime.createIMClient(this.userId).then(function(c) {
-      console.log('连接成功')
-      client = c
-      client.on('disconnect', function() {
-        console.log('[disconnect] 服务器连接已断开')
-      })
-      client.on('offline', function() {
-        console.log('[offline] 离线（网络连接已断开）')
-      })
-      client.on('online', function() {
-        console.log('[online] 已恢复在线')
-      })
-      client.on('schedule', function(attempt, time) {
-        console.log(
-          '[schedule] ' +
-          time / 1000 +
-          's 后进行第 ' +
-          (attempt + 1) +
-          ' 次重连'
-        )
-      })
-      client.on('retry', function(attempt) {
-        console.log('[retry] 正在进行第 ' + (attempt + 1) + ' 次重连')
-      })
-      client.on('reconnect', function() {
-        console.log('[reconnect] 重连成功')
-      })
-      client.on('reconnecterror', function() {
-        console.log('[reconnecterror] 重连失败')
-      })
+ //   realtime.createIMClient(this.userId).then(function(c) {
+   //   console.log('连接成功')
+     // client = c
+ //     client.on('disconnect', function() {
+   //     console.log('[disconnect] 服务器连接已断开')
+   //   })
+  //    client.on('offline', function() {
+  //      console.log('[offline] 离线（网络连接已断开）')
+  //    })
+  //    client.on('online', function() {
+   //     console.log('[online] 已恢复在线')
+    //  })
+  //    client.on('schedule', function(attempt, time) {
+  //      console.log(
+   //       '[schedule] ' +
+   //       time / 1000 +
+  //        's 后进行第 ' +
+  //        (attempt + 1) +
+  //        ' 次重连'
+   //     )
+   //   })
+   //   client.on('retry', function(attempt) {
+  //      console.log('[retry] 正在进行第 ' + (attempt + 1) + ' 次重连')
+  //    })
+   //   client.on('reconnect', function() {
+  //      console.log('[reconnect] 重连成功')
+   //   })
+   //   client.on('reconnecterror', function() {
+  //      console.log('[reconnecterror] 重连失败')
+  //    })
       // 获取对话
-      return c.getConversation(roomId)
-    })
-      .then(function(conversation) {
-        if (conversation) {
-          return conversation
-        } else {
+  //    return c.getConversation(roomId)
+  //  })
+ //     .then(function(conversation) {
+ //       if (conversation) {
+  //        return conversation
+   //     } else {
           // 如果服务器端不存在这个 conversation
-          console.log('不存在这个 conversation，创建一个。')
-          return client
-            .createConversation({
-              name: 'LeanCloud-Conversation',
+      //    console.log('不存在这个 conversation，创建一个。')
+       //   return client
+       //     .createConversation({
+       //       name: 'LeanCloud-Conversation',
               // 创建暂态的聊天室（暂态聊天室支持无限人员聊天）
-              transient: true,
-            })
-            .then(function(conversation) {
-              roomId = conversation.id
-              console.log('创建新 Room 成功，id 是：', roomId)
-              that.setParam("id", roomId)
-              return conversation
-            })
-        }
-      })
-      .then(function(conversation) {
-        return conversation.join()
-      })
-      .then(function(conversation) {
+     //         transient: true,
+     //       })
+        //    .then(function(conversation) {
+    //          roomId = conversation.id
+    //          console.log('创建新 Room 成功，id 是：', roomId)
+   //           that.setParam("id", roomId)
+    //          return conversation
+    //        })
+   //     }
+   //   })
+  //    .then(function(conversation) {
+   //     return conversation.join()
+    //  })
+    //  .then(function(conversation) {
         // 获取聊天历史
-        room = conversation;
-        that.chatRoom = conversation
+    //    room = conversation;
+    //    that.chatRoom = conversation
         // 房间接受消息
-        room.on('message', function(message) {
-          const result = JSON.parse(message._lctext)
-          that.resultHandler(result)
-        });
-      })
-      .catch(function(err) {
-        console.error(err);
-        console.log('错误：' + err.message);
-      });
+   //     room.on('message', function(message) {
+    //      const result = JSON.parse(message._lctext)
+    //      that.resultHandler(result)
+     //   });
+    //  })
+   //   .catch(function(err) {
+   //     console.error(err);
+   //     console.log('错误：' + err.message);
+    //  });
 
     /* 使用leanCloud ---------------------------*/
 
