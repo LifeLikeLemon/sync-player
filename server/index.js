@@ -21,5 +21,4 @@ io.on('connection', (socket) => {
     console.log('用户' + remoteUser + '的消息:' + controlParam);
     io.emit('video-control', controlParam);
   });
-
 });
